@@ -1,0 +1,16 @@
+# Create a function that inserts 'greg' into the middle of the string
+# If the string is a sentence, then put 'greg' in the middle of the sentence
+# If the string is a word, put 'greg' in the middle of the word
+
+def gregs_e_tagger(string):
+  if ' ' in string:
+    words = string.split()
+    middle = len(words) // 2
+    words.insert(middle, 'greg')
+    return ' '.join(words)
+  else:
+    middle = len(string) // 2
+    return string[:middle] + 'greg' + string[middle:]
+    
+print(gregs_e_tagger('Cats chase birds around the quiet yard.'))
+print(gregs_e_tagger('Independance'))
