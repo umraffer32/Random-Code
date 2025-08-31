@@ -1,0 +1,17 @@
+def is_valid_ipv4(ip_address):
+    convert = ip_address.split('.')
+    if len(convert) != 4: return False
+    for octet in convert:
+        if not octet.isdigit() or len(octet) > 1 and octet[0] == '0': return False
+    for octet in convert:
+        if int(octet) > 255 or int(octet) < 0: return False
+    return True        
+
+
+print(is_valid_ipv4("192.168.1.1"))      # True
+print(is_valid_ipv4("256.100.1.1"))      # False
+print(is_valid_ipv4("192.168.1"))        # False
+print(is_valid_ipv4("192.168.1.1.1"))    # False
+print(is_valid_ipv4("192.abc.1.1"))      # False
+print(is_valid_ipv4("192.168.01.1"))     # False
+print(is_valid_ipv4("0.0.0.0"))          # True
