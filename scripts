@@ -1,0 +1,23 @@
+---
+- name: Configure VLAN on IT_Network switch
+  hosts: IT_Network
+  gather_facts: no
+  
+  tasks:
+    - name: Create VLAN 40 for IT_Network
+      exos_config:
+        lines:
+          - create vlan IT_Network tag 40
+          - configure vlan IT_Network add ports 1-13 tagged
+        save_when: modified 
+
+==============================================================================
+
+exos:
+  hosts:
+    IT_Network:
+      ansible_host: 10.10.1.5
+  vars:
+    ansible_user: admin
+    ansible_connection: ansible.netcommon.network_cli
+    ansible_network_os: exos 
