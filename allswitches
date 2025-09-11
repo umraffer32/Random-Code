@@ -1,0 +1,39 @@
+exos:
+  hosts:
+    IT_Network:
+      ansible_host: 10.10.1.5
+    ACCT_Network:
+      ansible_host: 10.10.1.6
+    MGMT_Network:
+      ansible_host: 10.10.1.7
+    User_Network:
+      ansible_host: 10.10.1.8
+  vars:
+    ansible_user: admin
+    ansible_connection: ansible.netcommon.network_cli
+    ansible_network_os: exos
+========================================================
+---
+- name: Configure VLANs on all Access Closet switches
+  hosts: exos
+  gather_facts: no
+
+  tasks:
+    - name: Configure VLANs based on switch name
+      exos_config:
+        lines: "{{ vlan_commands[inventory_hostname] }}"
+        save_when: modified
+      vars:
+        vlan_commands:
+          IT_Network:
+            - create vlan IT_Network tag 40
+            - configure vlan IT_Network add ports 1-13 tagged
+          ACCT_Network:
+            - create vlan ACCT_Network tag 41
+            - configure vlan ACCT_Network add ports 1-13 tagged
+          MGMT_Network:
+            - create vlan MGMT_Network tag 42
+            - configure vlan MGMT_Network add ports 1-13 tagged
+          User_Network:
+            - create vlan User_Network tag 43
+            - configure vlan User_Network add ports 1-13 tagged
