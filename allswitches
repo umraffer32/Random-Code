@@ -19,21 +19,21 @@ exos:
   gather_facts: no
 
   tasks:
-    - name: Configure VLANs based on switch name
+    - name: Ensure VLAN exists (ignore if already created)
       exos_config:
-        lines: "{{ vlan_commands[inventory_hostname] }}"
+        lines:
+          - create vlan {{ inventory_hostname }} tag {{ vlan_id[inventory_hostname] }}
+      ignore_errors: yes   # avoids red failure if VLAN already exists
+
+    - name: Add ports 1-13 to VLAN
+      exos_config:
+        lines:
+          - configure vlan {{ inventory_hostname }} add ports 1-13 tagged
         save_when: modified
       vars:
-        vlan_commands:
-          IT_Network:
-            - create vlan IT_Network tag 40
-            - configure vlan IT_Network add ports 1-13 tagged
-          ACCT_Network:
-            - create vlan ACCT_Network tag 41
-            - configure vlan ACCT_Network add ports 1-13 tagged
-          MGMT_Network:
-            - create vlan MGMT_Network tag 42
-            - configure vlan MGMT_Network add ports 1-13 tagged
-          User_Network:
-            - create vlan User_Network tag 43
-            - configure vlan User_Network add ports 1-13 tagged
+        vlan_id:
+          IT_Network: 40
+          ACCT_Network: 41
+          MGMT_Network: 42
+          User_Network: 43
+
