@@ -1,0 +1,31 @@
+switches]
+IT_Network ansible_host=10.10.1.5 vlan_id=10
+MGMT_Network ansible_host=10.10.1.6 vlan_id=20
+ACCT_Network ansible_host=10.10.1.7 vlan_id=30
+USER_Network ansible_host=10.10.1.8 vlan_id=40
+
+[switches:vars]
+ansible_user=admin
+ansible_connection=ansible.netcommon.network_cli
+ansible_network_os=exos
+ansible_command_timeout=90
+ansible_connect_timeout=30
+
+=====================================================
+=====================================================
+
+---
+-  name: Create VLANs on EXOS Switches
+   hosts: switches
+   gather_facts: no
+   connection: network_cli
+   vars:
+     ansible_network_os: community.network.exos
+     
+   tasks:
+     - name: Create VLANs
+       community.network.exos_config:
+         lines:
+           - Create VLAN VLAN{{ vlan_id }} tag {{ vlan_id }}
+         match: none
+         save_when: changed
